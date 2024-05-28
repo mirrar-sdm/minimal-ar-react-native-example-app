@@ -25,16 +25,13 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
+## Add mirrAR AR package
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+npm install @mirrar-sdm/minimal-ar-react-native-sdk
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
+Check the docs here: https://docs.mirrar.com/react-native/introduction
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
