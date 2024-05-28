@@ -1,0 +1,2 @@
+export const FaceModel = 'https://mirrar.s3.ap-south-1.amazonaws.com/tryat-home/galleryModeFaceModel.jpg'
+export const HandModel = 'https://cdn.mirrar.com/webar/2024-04-26-04-50-46/img/galleryModeHandModel5.jpg'
