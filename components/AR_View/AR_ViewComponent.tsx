@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet, View, Text, Switch, Button, DeviceEventEmitter, Alert} from 'react-native';
-import {ARViewComponent} from '@mirrar-sdm/minimal-ar-react-native-sdk';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Switch,
+  Button,
+  DeviceEventEmitter,
+  Alert,
+} from 'react-native';
+import { ARViewComponent } from '@mirrar-sdm/minimal-ar-react-native-sdk';
 import { AR_Service } from '../../services/AR_Service';
 import RNPickerSelect from 'react-native-picker-select';
 import { FaceModel, HandModel } from '../../constants/Images';
@@ -11,25 +19,24 @@ const CategorySwitcher = () => {
     { label: 'Hand', value: 'hand' },
   ];
 
-  const [ selectedType, setSelectedType] = useState(items[0]?.value)
+  const [selectedType, setSelectedType] = useState(items[0]?.value);
 
   const updateAR = (value: string) => {
+    if (!AR_Service.arEngineSetupDone) return;
 
-    if(!AR_Service.arEngineSetupDone) return
-
-    let modelImage = ''
-    if(value == 'face') {
-      modelImage = FaceModel
-      AR_Service.setupFaceTracking()
-    } else if(value == 'hand') {
-      modelImage = HandModel
-      AR_Service.setupHandTracking()
+    let modelImage = '';
+    if (value == 'face') {
+      modelImage = FaceModel;
+      AR_Service.setupFaceTracking();
+    } else if (value == 'hand') {
+      modelImage = HandModel;
+      AR_Service.setupHandTracking();
     }
 
-    if(AR_Service.currentMode == 'model') {
-      AR_Service.changeModelImage(modelImage)
+    if (AR_Service.currentMode == 'model') {
+      AR_Service.changeModelImage(modelImage);
     }
-  }
+  };
 
   const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
@@ -60,33 +67,32 @@ const CategorySwitcher = () => {
     <View style={styles.picker}>
       <RNPickerSelect
         onValueChange={(value) => {
-          updateAR(value)
-          setSelectedType(value)
+          updateAR(value);
+          setSelectedType(value);
         }}
         items={items}
         style={pickerSelectStyles}
         value={selectedType}
       />
     </View>
-  )
-
-}
+  );
+};
 
 const AR_ModeSwitcher = () => {
   const [isCameraEnabled, setisCameraEnabled] = useState(false);
 
-  const toggleSwitch = () => setisCameraEnabled(previousState => !previousState);
+  const toggleSwitch = () =>
+    setisCameraEnabled((previousState) => !previousState);
 
   useEffect(() => {
-    console.log("React Native SDK: Switching modes")
-    if(!isCameraEnabled) {
-      let model = FaceModel
-      AR_Service.switchToModel(model)
+    console.log('React Native SDK: Switching modes');
+    if (!isCameraEnabled) {
+      let model = FaceModel;
+      AR_Service.switchToModel(model);
     } else {
-      AR_Service.switchToCamera()
+      AR_Service.switchToCamera();
     }
-
-  }, [isCameraEnabled])
+  }, [isCameraEnabled]);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('ar-event', (event) => {
@@ -102,49 +108,46 @@ const AR_ModeSwitcher = () => {
 
   return (
     <View style={styles.switchContainer}>
-        <Text>Model</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isCameraEnabled ? "#f5dd4b" : "#f4f3f4"}
-          onValueChange={toggleSwitch}
-          value={isCameraEnabled}
-        />
-        <Text>Camera</Text>
+      <Text>Model</Text>
+      <Switch
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
+        thumbColor={isCameraEnabled ? '#f5dd4b' : '#f4f3f4'}
+        onValueChange={toggleSwitch}
+        value={isCameraEnabled}
+      />
+      <Text>Camera</Text>
     </View>
-  )
-}
+  );
+};
 
 interface TakePhotoButtonProps {
   handleTakePhoto: () => void;
 }
 
-const TakePhotoButton = ({handleTakePhoto}: TakePhotoButtonProps) => {
+const TakePhotoButton = ({ handleTakePhoto }: TakePhotoButtonProps) => {
   return (
     <View style={styles.container}>
-      <Button title='Take Photo' onPress={handleTakePhoto}></Button>
+      <Button title="Take Photo" onPress={handleTakePhoto} />
     </View>
-  )
-}
+  );
+};
 
 const AR_ViewComponent = () => {
-
-  const [showActions, setShowActions] = useState(false)
-  const handleTakePhotoPress = () => {
-
-  }
+  const [showActions, setShowActions] = useState(false);
+  const handleTakePhotoPress = () => {};
 
   return (
     <View style={styles.container}>
-      <ARViewComponent onLoad={() => setShowActions(true)}/>
-      {
-        showActions && <>
+      <ARViewComponent onLoad={() => setShowActions(true)} />
+      {showActions && (
+        <>
           <AR_ModeSwitcher />
           <View style={styles.takePhotoContainer}>
             <CategorySwitcher />
             <TakePhotoButton handleTakePhoto={handleTakePhotoPress} />
           </View>
         </>
-      }
+      )}
     </View>
   );
 };
@@ -187,8 +190,8 @@ const styles = StyleSheet.create({
   picker: {
     margin: 2,
     flex: 1,
-    padding: 0
-  }
+    padding: 0,
+  },
 });
 
 export default AR_ViewComponent;
